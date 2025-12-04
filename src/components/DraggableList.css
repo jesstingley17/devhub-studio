@@ -1,0 +1,78 @@
+/* ============================================
+   Draggable List & Grid
+   ============================================ */
+
+.draggable-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.draggable-list.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.sortable-item {
+  display: flex;
+  align-items: stretch;
+  position: relative;
+}
+
+.sortable-item > *:not(.drag-handle) {
+  flex: 1;
+}
+
+/* Drag Handle */
+.drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  cursor: grab;
+  color: var(--text-muted);
+  opacity: 0;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.sortable-item:hover .drag-handle {
+  opacity: 1;
+}
+
+.drag-handle:hover {
+  color: var(--text-secondary);
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+/* Drag Overlay */
+.drag-overlay {
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-lg);
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
+/* Dragging States */
+.sortable-item[data-dragging="true"] {
+  opacity: 0.5;
+}
+
+/* Drop indicator */
+@keyframes dropPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 2px var(--accent-primary);
+  }
+  50% {
+    box-shadow: 0 0 0 4px var(--accent-glow);
+  }
+}
+
+.sortable-item.drop-target {
+  animation: dropPulse 0.5s ease-in-out infinite;
+}
+

@@ -501,6 +501,38 @@
   color: var(--accent-primary);
 }
 
+/* Status Buttons */
+.status-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.status-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.status-btn:hover {
+  background: var(--bg-elevated);
+  border-color: var(--border-default);
+}
+
+.status-btn.active {
+  background: var(--accent-glow);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
 .modal-actions {
   display: flex;
   gap: 12px;

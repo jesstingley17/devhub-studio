@@ -136,6 +136,13 @@
   opacity: 1;
 }
 
+.notes-empty {
+  padding: 16px 12px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
 /* Main Content */
 .ideas-content {
   padding: 32px;

@@ -1,0 +1,227 @@
+/* ============================================
+   Command Palette - Spotlight-style Search
+   ============================================ */
+
+.command-palette-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 12vh;
+  z-index: 9999;
+}
+
+.command-palette {
+  width: 100%;
+  max-width: 640px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+/* Input */
+.command-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.command-search-icon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.command-input {
+  flex: 1;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: var(--text-primary);
+  padding: 0;
+}
+
+.command-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.command-input::placeholder {
+  color: var(--text-muted);
+}
+
+.command-shortcuts {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+}
+
+.command-shortcuts kbd {
+  padding: 2px 6px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+}
+
+.command-shortcuts span {
+  margin-right: 8px;
+}
+
+/* Results */
+.command-results {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.command-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 24px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.command-empty p {
+  font-size: 0.875rem;
+}
+
+/* Groups */
+.command-group {
+  margin-bottom: 8px;
+}
+
+.command-group:last-child {
+  margin-bottom: 0;
+}
+
+.command-group-title {
+  padding: 8px 12px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+/* Items */
+.command-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.command-item:hover,
+.command-item.selected {
+  background: var(--bg-hover);
+}
+
+.command-item.selected {
+  background: var(--accent-glow);
+}
+
+.command-item-icon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.command-item.selected .command-item-icon {
+  color: var(--accent-primary);
+}
+
+.command-item-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.command-item-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.command-item-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.command-item-type {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  padding: 2px 8px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.command-item-arrow {
+  color: var(--accent-primary);
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.command-item.selected .command-item-arrow {
+  opacity: 1;
+}
+
+/* Footer */
+.command-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-tertiary);
+}
+
+.command-footer-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+}
+
+/* Responsive */
+@media (max-width: 680px) {
+  .command-palette-overlay {
+    padding: 16px;
+    padding-top: 10vh;
+  }
+  
+  .command-shortcuts {
+    display: none;
+  }
+  
+  .command-footer {
+    display: none;
+  }
+}
+

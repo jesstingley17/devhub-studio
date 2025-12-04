@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import {
   LayoutDashboard,
   FolderKanban,
@@ -19,6 +19,7 @@ import {
   Plus,
   Command
 } from 'lucide-react'
+import { useUIStore } from '../stores/useStore'
 import './Layout.css'
 
 const navItems = [
@@ -34,9 +35,8 @@ const secondaryNav = [
   { path: '/settings', icon: Settings, label: 'Settings' },
 ]
 
-function Layout({ children, theme, toggleTheme }) {
-  const [collapsed, setCollapsed] = useState(false)
-  const [searchOpen, setSearchOpen] = useState(false)
+function Layout({ children, theme, toggleTheme, onSearchClick }) {
+  const { sidebarCollapsed, toggleSidebar } = useUIStore()
   const location = useLocation()
 
   const pageTitle = navItems.find(item => item.path === location.pathname)?.label 
@@ -44,7 +44,7 @@ function Layout({ children, theme, toggleTheme }) {
     || 'DevHub'
 
   return (
-    <div className={`layout ${collapsed ? 'sidebar-collapsed' : ''}`}>
+    <div className={`layout ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
       {/* Sidebar */}
       <aside className="sidebar">
         <div className="sidebar-header">
@@ -52,7 +52,7 @@ function Layout({ children, theme, toggleTheme }) {
             <div className="logo-icon">
               <Sparkles size={20} />
             </div>
-            {!collapsed && (
+            {!sidebarCollapsed && (
               <motion.span 
                 className="logo-text"
                 initial={{ opacity: 0 }}
@@ -65,21 +65,21 @@ function Layout({ children, theme, toggleTheme }) {
           </div>
           <button 
             className="collapse-btn btn-icon"
-            onClick={() => setCollapsed(!collapsed)}
-            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            onClick={toggleSidebar}
+            aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+            {sidebarCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
           </button>
         </div>
 
         {/* Quick Actions */}
-        {!collapsed && (
+        {!sidebarCollapsed && (
           <motion.div 
             className="quick-actions"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <button className="quick-action-btn" onClick={() => setSearchOpen(true)}>
+            <button className="quick-action-btn" onClick={onSearchClick}>
               <Search size={14} />
               <span>Quick Search</span>
               <kbd><Command size={10} />K</kbd>
@@ -90,7 +90,7 @@ function Layout({ children, theme, toggleTheme }) {
         {/* Main Navigation */}
         <nav className="sidebar-nav">
           <div className="nav-section">
-            {!collapsed && <span className="nav-section-title">Workspace</span>}
+            {!sidebarCollapsed && <span className="nav-section-title">Workspace</span>}
             <ul className="nav-list">
               {navItems.map((item, index) => (
                 <li key={item.path}>
@@ -100,13 +100,13 @@ function Layout({ children, theme, toggleTheme }) {
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
                     <item.icon size={18} className="nav-icon" />
-                    {!collapsed && (
+                    {!sidebarCollapsed && (
                       <>
                         <span className="nav-label">{item.label}</span>
                         <span className="nav-shortcut">{item.shortcut}</span>
                       </>
                     )}
-                    {collapsed && (
+                    {sidebarCollapsed && (
                       <div className="nav-tooltip">{item.label}</div>
                     )}
                   </NavLink>
@@ -116,7 +116,7 @@ function Layout({ children, theme, toggleTheme }) {
           </div>
 
           {/* Favorites Section */}
-          {!collapsed && (
+          {!sidebarCollapsed && (
             <div className="nav-section">
               <span className="nav-section-title">Favorites</span>
               <ul className="nav-list favorites-list">
@@ -146,8 +146,8 @@ function Layout({ children, theme, toggleTheme }) {
                     className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
                   >
                     <item.icon size={18} className="nav-icon" />
-                    {!collapsed && <span className="nav-label">{item.label}</span>}
-                    {collapsed && (
+                    {!sidebarCollapsed && <span className="nav-label">{item.label}</span>}
+                    {sidebarCollapsed && (
                       <div className="nav-tooltip">{item.label}</div>
                     )}
                   </NavLink>
@@ -163,7 +163,7 @@ function Layout({ children, theme, toggleTheme }) {
             <div className="avatar">
               <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jessica" alt="User" />
             </div>
-            {!collapsed && (
+            {!sidebarCollapsed && (
               <div className="user-info">
                 <span className="user-name">Jessica</span>
                 <span className="user-role">Developer</span>
@@ -181,7 +181,7 @@ function Layout({ children, theme, toggleTheme }) {
             <h1 className="page-title">{pageTitle}</h1>
           </div>
           <div className="header-right">
-            <button className="btn btn-ghost btn-icon" onClick={() => setSearchOpen(true)}>
+            <button className="btn btn-ghost btn-icon" onClick={onSearchClick}>
               <Search size={18} />
             </button>
             <button className="btn btn-ghost btn-icon notification-btn">
@@ -204,63 +204,8 @@ function Layout({ children, theme, toggleTheme }) {
           {children}
         </div>
       </main>
-
-      {/* Search Modal */}
-      <AnimatePresence>
-        {searchOpen && (
-          <motion.div 
-            className="search-modal-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSearchOpen(false)}
-          >
-            <motion.div 
-              className="search-modal"
-              initial={{ opacity: 0, scale: 0.95, y: -20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: -20 }}
-              onClick={e => e.stopPropagation()}
-            >
-              <div className="search-input-wrapper">
-                <Search size={20} className="search-icon" />
-                <input 
-                  type="text" 
-                  placeholder="Search projects, documents, clients..."
-                  autoFocus
-                  className="search-input"
-                />
-                <kbd className="search-kbd">ESC</kbd>
-              </div>
-              <div className="search-results">
-                <div className="search-section">
-                  <span className="search-section-title">Recent</span>
-                  <div className="search-items">
-                    <div className="search-item">
-                      <FolderKanban size={16} />
-                      <span>E-commerce Platform Redesign</span>
-                      <span className="search-item-type">Project</span>
-                    </div>
-                    <div className="search-item">
-                      <FileSignature size={16} />
-                      <span>Service Agreement - TechCorp</span>
-                      <span className="search-item-type">Document</span>
-                    </div>
-                    <div className="search-item">
-                      <Users size={16} />
-                      <span>Sarah Miller</span>
-                      <span className="search-item-type">Client</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   )
 }
 
 export default Layout
-
